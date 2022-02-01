@@ -9,7 +9,6 @@ export const Searchbar = styled.header`
   padding-left: 24px;
   padding-top: 12px;
   padding-bottom: 12px;
-  color: #fff;
   background-color: #f2f2f2;
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
@@ -23,7 +22,8 @@ export const Form = styled.form`
 
   @media only screen and (min-width: 768px) {
     display: flex;
-    align-items: center;
+    align-items: baseline;
+    justify-content: center;
   }
 `;
 
@@ -70,4 +70,9 @@ export const Select = styled.select`
     margin-top: 30px;
     width: 150px;
   }
+`;
+
+export const SelectText = styled.span`
+  display: inline-block;
+  margin-right: 6px;
 `;

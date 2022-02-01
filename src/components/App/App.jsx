@@ -1,39 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import {
-  fetchAllCharacters,
-  fetchFiltredCharacters,
-} from "../../heplers/rickAndMortyAPI";
-import LoadMore from "../Button/Button";
+import { fetchCharacters } from "../../redux/RickAndMorty/api-operations";
+import { resetCharacters } from "../../redux/RickAndMorty/api-slice";
+import { Oval } from "react-loader-spinner";
+import LoadMore from "../Button/LoadMore";
 import Characters from "../Characters/Characters";
-
-import SearchForm from "../SearchForm/SearchForm";
-
+import ServerSerchForm from "../SearchForm/ServerSearchForm";
+import "react-toastify/dist/ReactToastify.css";
 import { Wrapper } from "./App.styled";
+import FrontSerchForm from "../SearchForm/FrontSearchForm";
 
 export default function App() {
-  const [characters, setCharacters] = useState([]);
-  const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+  const characters = useSelector((state) => state.api.characters);
+  const characterToFind = useSelector((state) => state.api.characterToFind);
+  const page = useSelector((state) => state.api.curentPage);
+  const isLoading = useSelector((state) => state.api.isLoading);
 
-  const updatePageHandler = (page) => {
-    setPage(page);
-  };
-
+  // Если это первая страница обнуляем массив персонажей в стейте
+  // и фетчим персонажей в зависимости от данных из инпутов.
+  // зависимости - меняется персонаж для поиска или меняется страница пагинации
   useEffect(() => {
-    const fetch = async () => {
-      const chars = await fetchAllCharacters(page);
-
-      page === 1
-        ? setCharacters(chars.results)
-        : setCharacters((prev) => [...prev, ...chars.results]);
-    };
-    fetch();
-  }, [page]);
-
-  const getFiltredCharacters = async (char) => {
-    const filtredChars = await fetchFiltredCharacters(char);
-    setCharacters(filtredChars?.results);
-  };
+    page === 1 && dispatch(resetCharacters());
+    dispatch(fetchCharacters(characterToFind));
+  }, [characterToFind, page]);
 
   return (
     <Wrapper>
@@ -48,13 +39,11 @@ export default function App() {
         draggable
         pauseOnHover
       />
-      <SearchForm onSubmit={getFiltredCharacters} />
-      {characters ? (
-        <Characters characters={characters} />
-      ) : (
-        <p>Nothing was found</p>
-      )}
-      <LoadMore onClick={updatePageHandler} page={page} />
+      <ServerSerchForm />
+      <FrontSerchForm />
+      {isLoading && <Oval color="#00BFFF" height={80} width={80} />}
+      {characters.length ? <Characters /> : <p>Nothing was found</p>}
+      <LoadMore />
     </Wrapper>
   );
 }
