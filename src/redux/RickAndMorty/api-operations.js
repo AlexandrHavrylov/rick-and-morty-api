@@ -15,8 +15,8 @@ export const fetchCharacters = createAsyncThunk(
 
       return data.results;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
       toast.error("Nothing was found. Please change search params");
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

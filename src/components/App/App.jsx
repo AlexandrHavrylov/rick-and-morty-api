@@ -41,8 +41,9 @@ export default function App() {
       />
       <ServerSerchForm />
       <FrontSerchForm />
+
+      <Characters />
       {isLoading && <Oval color="#00BFFF" height={80} width={80} />}
-      {characters.length ? <Characters /> : <p>Nothing was found</p>}
       <LoadMore />
     </Wrapper>
   );
